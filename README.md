@@ -3,7 +3,10 @@ Playbook for ansible that install i3wm with other essentials for desktop envirom
 Usefull for new workstation fast setup.
 
 # Basic enviroment installation and tuning
-ansible-playbook -i '192.168.1.36,' steps.yml -u roman -kK
+```
+ansible-playbook -i '192.168.1.36,' install.yml -u roman -kK
+```
+Replace ip and user name (in playbook too) for your needings
 ## Requirements:
  - ansible >= 2.1
  - openssh-server on target
