@@ -1,0 +1,22 @@
+---
+- name: Install zsh
+  apt:
+    state: present
+    name: zsh
+  become: true
+
+- name: Install oh-my-zsh
+  git:
+    repo: https://github.com/robbyrussell/oh-my-zsh
+    dest: ~/.oh-my-zsh
+
+- name: Configure .zshrc
+  template:
+    src: zshrc.j2
+    dest: "/home/{{ username }}/.zshrc"
+
+- name: Set zsh as default shell
+  user: 
+       name: "{{ username }}"
+       shell: /bin/zsh
+  become: true

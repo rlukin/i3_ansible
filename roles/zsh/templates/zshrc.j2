@@ -1,0 +1,15 @@
+DEFAULT_USER={{ username }}
+
+export ZSH=/home/{{ username }}/.oh-my-zsh
+
+ZSH_THEME="agnoster"
+
+plugins=(git)
+
+source $ZSH/oh-my-zsh.sh
+
+alias allow_bri='sudo chmod o+w /sys/class/backlight/intel_backlight/brightness /sys/class/leds/asus\:\:kbd_backlight/brightness'
+alias trans='gawk -f <(curl -Ls git.io/translate) -shell'
+
+alias ll='ls -lah'
+alias vi='vim'

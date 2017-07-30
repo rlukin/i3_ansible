@@ -1,0 +1,75 @@
+---
+- name: Install window manager and essentials
+  apt:
+         state: present
+         name: "{{ item }}"
+  with_items:
+         - i3
+         - i3blocks
+         - rofi
+         - feh
+         - compton
+         - lxappearance
+         - arandr
+  become: true
+
+- name: Remove dunst
+  apt:
+       state: absent
+       name: dunst
+  become: true
+
+- name: Create .i3 directory in "/home/{{ username }}"
+  file:
+        path: "/home/{{ username }}/.i3"
+        state: directory
+        mode: 0750
+
+- name: Copy configs in "/home/{{ username }}/.i3/"
+  copy:
+        src: "{{ item }}"
+        dest: "/home/{{ username }}/.i3"
+  with_items:
+        - compton.conf
+        - config
+        - i3blocks.conf
+        - lock_wallpaper
+        - wallpaper
+
+
+- name: Create scripst directory in "/home/{{ username }}"
+  file:
+        path: "/home/{{ username }}/.i3/scripts"
+        state: directory
+        mode: 0750
+
+- name: Copy configs for i3blocks in "/home/{{ username }}/.i3/scripts"
+  copy:
+        src: "{{ item }}"
+        dest: "/home/{{ username }}/.i3/scripts"
+  with_fileglob:
+        - scripts/*
+
+- name: Add arc-theme into sources.list
+  apt_repository:
+        repo: deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_16.04/ /
+        state: present
+        filename: arc-theme
+  become: true
+
+- name: Update apt cache
+  apt:
+        update_cache: yes
+  become: true
+
+- name: Install arc-theme
+  apt:
+        state: present
+        name: arc-theme
+        allow_unauthenticated: yes
+  become: true
+
+- name: Configure gtk theme
+  template:
+          src: gtkrc-2.0.j2
+          dest: "/home/{{ username }}/.gtkrc-2.0"

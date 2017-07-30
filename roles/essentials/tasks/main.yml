@@ -1,0 +1,67 @@
+---
+- name: Install essential packages
+  apt:
+    state: present
+    name: "{{ item }}"
+  with_items:
+    - firefox
+    - chromium-browser
+    - guake
+    - terminator
+    - vim
+    - tmux
+    - virtualbox
+    - thunar
+    - curl
+    - wget
+    - ncdu
+    - git
+  become: true
+
+- name: Configure .tmux.conf
+  copy:
+      src: tmux.conf
+      dest: "/home/{{ username }}/.tmux.conf"
+
+- name: Install tmux themepack
+  git: 
+      repo: https://github.com/jimeh/tmux-themepack.git 
+      dest: /home/{{ username }}/.tmux-themepack
+
+- name: Download fonts for powerline
+  git: 
+      repo: https://github.com/powerline/fonts.git 
+      dest: /tmp/fonts/
+
+- name: Install fonts for powerline
+  shell: "sh /tmp/fonts/install.sh"
+
+- name: Install vundle
+  git: 
+      repo: https://github.com/VundleVim/Vundle.vim.git 
+      dest: ~/.vim/bundle/Vundle.vim 
+
+- name: Configure vim
+  copy:
+    src: vimrc 
+    dest: "/home/{{ username }}/.vimrc"
+
+- name: Install vim plugins
+  shell: "vim +PluginInstall +qall"
+
+- name: Create directory for configs
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+          - "/home/{{ username }}/.config/terminator"
+          - "/home/{{ username }}/.gconf/apps" 
+
+- name: Configure terminator
+  copy:
+    src: terminator.conf 
+    dest: "/home/{{ username }}/.config/terminator/config"
+            
+- unarchive:
+    src: guake.tar
+    dest: "/home/{{ username }}/.gconf/apps/"
